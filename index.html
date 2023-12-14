@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,6 +25,8 @@
 <body>
 
 <div id="map"></div>
+<br>
+<div id="placar">PONTOS 00</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -40,20 +42,34 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(mymap);
 
+    let customIcon = {
+        iconUrl:"capivara.png",
+        iconSize:[40,40]
+    };
+    let myIcon = L.icon(customIcon);
+
+    let iconOptions = {
+    title:"company name",
+    draggable:true,
+    icon:myIcon
+    }
+
     // Adição do marcador arrastável
-    var marker = L.marker(markerCoordinates, { draggable: true }).addTo(mymap);
+    var marker = L.marker(markerCoordinates, iconOptions).addTo(mymap);
 
     // Localização da foto
     var queroLat = -23.559837029101224
+    var queroLng = -46.72113597393036
 
     // Evento para atualizar as coordenadas quando o marcador é arrastado
     marker.on('dragend', function(event){
         var position = marker.getLatLng();
         var lat = position.lat;
         var lng = position.lng;
-        console.log("LAT = ", lat, "LNG = ", lng);
     //diferença
-        console.log("PONTOS = ", (Math.abs(lat)-Math.abs(queroLat))*100+1)
+        var diferencaLat = (Math.abs(lat-queroLat)*1000)+1
+        var diferencaLng = (Math.abs(lng-queroLng)*1000)+1
+        console.log("PONTOS", (10/((diferencaLng+diferencaLat)/2)).toFixed(2))
     });
     //CENTRAL = -23.559837029101224 -46.72113597393036
 </script>
