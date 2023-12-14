@@ -31,8 +31,6 @@
 <script>
     // Coordenadas do marcador
     var markerCoordinates = [-23.5606, -46.7293];
-    console.log("PRIMEIRO: ", markerCoordinates[0])
-    console.log("SEGUNDO: ", markerCoordinates[1])
 
     // Criação do mapa
     var mymap = L.map('map',  {minZoom: 15, maxZoom: 18}).setView(markerCoordinates, 13);
@@ -42,8 +40,22 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(mymap);
 
-    // Adição do marcador
-    L.marker(markerCoordinates).addTo(mymap);
+    // Adição do marcador arrastável
+    var marker = L.marker(markerCoordinates, { draggable: true }).addTo(mymap);
+
+    // Localização da foto
+    var queroLat = -23.559837029101224
+
+    // Evento para atualizar as coordenadas quando o marcador é arrastado
+    marker.on('dragend', function(event){
+        var position = marker.getLatLng();
+        var lat = position.lat;
+        var lng = position.lng;
+        console.log("LAT = ", lat, "LNG = ", lng);
+    //diferença
+        console.log("PONTOS = ", (Math.abs(lat)-Math.abs(queroLat))*100+1)
+    });
+    //CENTRAL = -23.559837029101224 -46.72113597393036
 </script>
 
 </body>
