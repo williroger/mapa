@@ -3,53 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa OpenStreetMap</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+	<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
+    <title>MAPA USP</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #1094ab;
         }
-
         #map {
-            width: 600px;
-            height: 600px;
+			min-height: 450px;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" integrity="sha512-Zcn6bjR/8RZbLEpLIeOwNtzREBAJnUKESxces60Mpoj+2okopSAcSUIUOseddDm0cxnGQzxIR7vJgsLZbdLE3w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+<!-- Container for demo purpose -->
+<div class="container my-20 mx-auto md:px-6 ml-0">
+<p class="text-center m-4 font-bold font-['Open_Sans'] text-white text-2xl">ONDE ESTOU?!</p>
+  <!-- Section: Design Block -->
+  <section class="mb-32">
+		<div class="flex flex-wrap">
+			<div class="mb-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 lg:w-5/12">
+				<div class="flex lg:py-12">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Capybara_%28Hydrochoerus_hydrochaeris%29.JPG/800px-Capybara_%28Hydrochoerus_hydrochaeris%29.JPG?20210408150809"
+					class="z-[2] w-full rounded-lg shadow-lg dark:shadow-black/20 lg:ml-[50px]" alt="image" />
+				</div>
+			</div>
+			<div class="z-0 w-full shrink-0 grow-0 basis-auto lg:w-7/12">
+				<div id="map"
+				  class="flex h-full items-center rounded-lg bg-amber-400 p-6 text-center text-white lg:pl-12 lg:text-left">
+				</div>
+			</div>
+		</div>
+		<!-- Card botão confirmar-->
+		<div class="block text-center">
+		  <div class="p-6">
+					<button
+						id="modal-button"
+						type="button"
+						class="rounded bg-amber-400 px-6 pb-2 pt-2.5 text-xs font-bold uppercase leading-normal text-white">
+					  CONFIRMAR
+					</button>
+		  </div>
+		</div>
+		
+<!-- MODAL -->
 
-<div id="map"></div>
-<br>
-<div id="placar">PONTOS 00</div>
+    <div id="modal" class="z-[3] hidden items-center justify-center h-screen w-screen fixed top-0 bg-black bg-opacity-60"> <!--Modal Dialog -->
+        <div class="bg-white max-w-xl w-full rounded"> <!--Modal Content -->
+            <div class="p-3 flex items-center justify-between border-b border-b-gray-300"> <!--Modal Header -->
+                <h3 class="font-semibold text-xl" id="resultado">PONTUAÇÃO: 10/10</h3>
+                <span class="modal-close cursor-pointer">×</span> <!-- Close Modal -->
+            </div>
+            <div class="p-3 border-b border-b-gray-300 rounded"> <!--Modal Body -->
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Nam excepturi repellendus amet, alias quia tenetur aut, perspiciatis assumenda deserunt iusto
+                    incidunt.</p>
+            </div>
+        </div>
+    </div>
+
+
+  </section>
+  <!-- Section: Design Block -->
+</div>
+<!-- Container for demo purpose -->
+
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 <script>
     // Coordenadas do marcador
     var markerCoordinates = [-23.5606, -46.7293];
 
     // Criação do mapa
-    var mymap = L.map('map',  {minZoom: 15, maxZoom: 18}).setView(markerCoordinates, 13);
+    var mymap = L.map('map',  {minZoom: 15, maxZoom: 18, zoomControl: false}).setView(markerCoordinates, 13);
+	
+	// Controle de zoom do lado direito
+	L.control.zoom({
+		position: 'bottomright'
+	}).addTo(mymap);
 
     // Adição da camada do OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(mymap);
 
+	// icone de capivara
     let customIcon = {
         iconUrl:"capivara.png",
         iconSize:[40,40]
     };
+	
     let myIcon = L.icon(customIcon);
 
     let iconOptions = {
-    title:"company name",
+    title:"capivara",
     draggable:true,
     icon:myIcon
     }
@@ -69,9 +120,43 @@
     //diferença
         var diferencaLat = (Math.abs(lat-queroLat)*1000)+1
         var diferencaLng = (Math.abs(lng-queroLng)*1000)+1
-        console.log("PONTOS", (10/((diferencaLng+diferencaLat)/2)).toFixed(2))
+		var resultado = (10/((diferencaLng+diferencaLat)/2)).toFixed(2)
+        console.log("PONTOS", resultado)
+		var dataContainer  = document.getElementById('resultado');
+        dataContainer.innerHTML = "PONTOS: "+resultado+"/10";
     });
     //CENTRAL = -23.559837029101224 -46.72113597393036
+	
+	
+
+	
+	//MODAL
+	const x = document.getElementsByTagName('BODY')[0] // Select body tag because of disable scroll when modal is active
+    const modal = document.getElementById('modal') // modal
+    const modalBtn = document.getElementById('modal-button') // launch modal button
+    const modalClose = document.getElementsByClassName('modal-close') // close modal button
+
+    // Open modal
+    modalBtn.onclick = function () {
+            modal.style.display = "flex"; // Show modal
+            x.style.overflow = "hidden"; //Disable scroll on body
+    }
+
+    // Select and trigger all close buttons
+    for (var i = 0; i < modalClose.length; i++) {
+        modalClose[i].addEventListener('click', function () {
+            modal.style.display = "none"; // Hide modal
+            x.style.overflow = "auto"; // Active scroll on body
+        })
+    }
+
+    // Close modal when click away from modal
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none"; // Hide modal
+            x.style.overflow = "auto"; // Active scroll on body
+        }
+    }
 </script>
 
 </body>
